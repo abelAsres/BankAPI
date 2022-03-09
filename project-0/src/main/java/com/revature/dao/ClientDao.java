@@ -36,7 +36,8 @@ public class ClientDao {
             ResultSet result = pstmt.getGeneratedKeys();
 
             result.next();
-
+            pstmt.close();
+            result.close();
             int generatedId = result.getInt(1);
 
             return new Client(generatedId,client.getFirst_name(),client.getLast_name());
@@ -60,11 +61,14 @@ public class ClientDao {
                         results.getString("first_name"),
                         results.getString("last_name")));
             }
+
+            pstmt.close();
+            results.close();
         }
         return clients;
     }
 
-    public Client getClientByid(String id) throws SQLException {
+    public Client getClientByid(int id) throws SQLException {
         try(Connection connection= ConnectionUtility.getConnection()){
 
             String query = "SELECT * FROM clients WHERE client.id = ?";
@@ -72,10 +76,12 @@ public class ClientDao {
 
             PreparedStatement pstmt = connection.prepareStatement(query);
 
-            pstmt.setString(1,id);
+            pstmt.setInt(1,id);
 
             ResultSet results = pstmt.executeQuery();
 
+            pstmt.close();
+            results.close();
             results.next();
             return new Client(results.getInt(1),results.getString("first_name"),results.getString("last_name"));
         }
@@ -91,6 +97,7 @@ public class ClientDao {
              pstmt.setString(2,client.getLast_name());
 
              pstmt.executeUpdate();
+             pstmt.close();
         }
         return client;
     }
@@ -103,6 +110,7 @@ public class ClientDao {
 
             pstmt.setInt(1,id);
             int deletedClients = pstmt.executeUpdate();
+            pstmt.close();
 
             if(deletedClients == 1){
                 return true;

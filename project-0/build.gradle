@@ -14,6 +14,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     //include postgres driver dependency to connect to DB
     implementation 'org.postgresql:postgresql:42.3.3'
+    //mockito is a testing framework for java that allows the creation of test double objects
+    testImplementation 'org.mockito:mockito-core:4.3.1'
 }
 
 test {
