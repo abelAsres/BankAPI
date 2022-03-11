@@ -16,6 +16,9 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.3.3'
     //mockito is a testing framework for java that allows the creation of test double objects
     testImplementation 'org.mockito:mockito-core:4.3.1'
+    implementation 'io.javalin:javalin:4.3.0'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
 }
 
 test {

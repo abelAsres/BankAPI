@@ -10,7 +10,7 @@ public class ClientService {
     private ClientDao clientDao;
 
     public ClientService() {
-        this.clientDao = clientDao;
+        this.clientDao = new ClientDao();
     }
 
     public ClientService(ClientDao mockClientDao) {
@@ -48,4 +48,46 @@ public class ClientService {
             throw new IllegalArgumentException("The client id provided was invalid");
         }
     }
+
+    public Client updateClient(String clientId,Client client) throws Exception {
+        //check if client exists
+        if (clientDao.getClientByid(Integer.parseInt(clientId)) == null){
+            throw new Exception("Client with the id "+ clientId+" does not exist in the database");
+        }
+
+        validateClientInformation(client);
+        Client updatedClient = this.clientDao.updateClient(client);
+        return updatedClient;
+    }
+
+    public void validateClientInformation(Client client) {
+        client.setFirst_name(client.getFirst_name().trim());
+        client.setLast_name(client.getLast_name().trim());
+
+        if (!client.getFirst_name().matches("[a-zA-Z?']+")) {
+            throw new IllegalArgumentException("First name must only have alphabetical characters. First name input was " + client.getFirst_name());
+        }
+
+        if (!client.getLast_name().matches("[a-zA-Z?']+")) {
+            throw new IllegalArgumentException("Last name must only have alphabetical characters. Last name input was " + client.getLast_name());
+        }
+    }
+
+    public boolean removeClient(String id) throws Exception {
+        int clientId = Integer.parseInt(id);
+
+        if (clientDao.getClientByid(clientId) == null){
+            throw new Exception("Client with the id "+ clientId+" does not exist in the database");
+        }
+        return clientDao.removeClient(clientId);
+    }
+
+    public Client addClient(Client newClient) throws SQLException {
+        validateClientInformation(newClient);
+        Client addedClient = clientDao.addClient(newClient);
+        return addedClient;
+    }
+
+
+
 }

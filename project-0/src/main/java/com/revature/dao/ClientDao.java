@@ -26,20 +26,21 @@ public class ClientDao {
     * */
     public Client addClient(Client client) throws SQLException {
         try(Connection connection = ConnectionUtility.getConnection()) {
-            String query = "INSERT INTO client(first_name,last_name) VALUES(?,?)";
+            String query = "INSERT INTO clients(first_name,last_name) VALUES(?,?)";
 
             PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             pstmt.setString(1,client.getFirst_name());
             pstmt.setString(2,client.getLast_name());
 
+            pstmt.executeUpdate();
+
             ResultSet result = pstmt.getGeneratedKeys();
 
             result.next();
+            int generatedId = result.getInt(1);
             pstmt.close();
             result.close();
-            int generatedId = result.getInt(1);
-
             return new Client(generatedId,client.getFirst_name(),client.getLast_name());
         }
     }
@@ -70,21 +71,21 @@ public class ClientDao {
 
     public Client getClientByid(int id) throws SQLException {
         try(Connection connection= ConnectionUtility.getConnection()){
-
-            String query = "SELECT * FROM clients WHERE client.id = ?";
-
-
+            String query = "SELECT * FROM clients WHERE clients.id = ?";
             PreparedStatement pstmt = connection.prepareStatement(query);
-
             pstmt.setInt(1,id);
 
             ResultSet results = pstmt.executeQuery();
-
-            pstmt.close();
-            results.close();
-            results.next();
-            return new Client(results.getInt(1),results.getString("first_name"),results.getString("last_name"));
+            if(results.next()){
+                int clientId = results.getInt(1);
+                String clientFirstName = results.getString("first_name");
+                String clientLastName = results.getString("last_name");
+                pstmt.close();
+                results.close();
+                return new Client(clientId,clientFirstName,clientLastName);
+            }
         }
+        return null;
     }
 
     public Client updateClient(Client client) throws SQLException {
