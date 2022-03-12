@@ -35,9 +35,7 @@ public class ClientService {
             // known as NumberFormatException
             // Important to take note of this, because any unhandled exceptions will result
             // in a 500 Internal Server Error (which we should try to avoid)
-            int clientId = Integer.parseInt(id);
-
-            Client client = this.clientDao.getClientByid(clientId);
+            Client client = this.clientDao.getClientByid(Integer.parseInt(id));
 
             if(client == null){
                 throw new Exception("Client with id "+id+" does not exist in DB");
@@ -50,14 +48,16 @@ public class ClientService {
     }
 
     public Client updateClient(String clientId,Client client) throws Exception {
+
+        int id = Integer.parseInt(clientId);
         //check if client exists
-        if (clientDao.getClientByid(Integer.parseInt(clientId)) == null){
+        if (clientDao.getClientByid(id) == null){
             throw new Exception("Client with the id "+ clientId+" does not exist in the database");
         }
 
         validateClientInformation(client);
-        Client updatedClient = this.clientDao.updateClient(client);
-        return updatedClient;
+        client.setId(id);
+        return this.clientDao.updateClient(client);
     }
 
     public void validateClientInformation(Client client) {
@@ -84,10 +84,6 @@ public class ClientService {
 
     public Client addClient(Client newClient) throws SQLException {
         validateClientInformation(newClient);
-        Client addedClient = clientDao.addClient(newClient);
-        return addedClient;
+        return clientDao.addClient(newClient);
     }
-
-
-
 }

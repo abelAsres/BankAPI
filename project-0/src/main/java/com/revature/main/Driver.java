@@ -1,5 +1,6 @@
 package com.revature.main;
 
+import com.revature.controller.AccountTypeController;
 import com.revature.controller.ClientController;
 import com.revature.controller.Controller;
 import io.javalin.Javalin;
@@ -10,7 +11,7 @@ public class Driver {
         Javalin app = Javalin.create();
 
         //initalize contollers
-        mapControllers(app, new ClientController());
+        mapControllers(app, new ClientController(),new AccountTypeController());
 
         //start server on default port(8080)
         app.start();

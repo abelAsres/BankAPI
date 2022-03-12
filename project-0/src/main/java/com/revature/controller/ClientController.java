@@ -29,9 +29,20 @@ public class ClientController implements Controller{
 
     private Handler updateClient = ctx -> {
         Client clientToBeUpdated = ctx.bodyAsClass(Client.class);
-        Client updatedClient = clientService.updateClient(ctx.pathParam("id"),clientToBeUpdated);
+        Client updatedClient = clientService.updateClient(ctx.pathParam("clientId"),clientToBeUpdated);
         ctx.status(200);
         ctx.json(updatedClient);
+    };
+
+    private Handler removeClient = ctx -> {
+        ctx.json(clientService.removeClient(ctx.pathParam("clientId")));
+    };
+
+    private Handler removeAccountType = ctx -> {
+        //System.out.println(ctx.req.getRemoteAddr());
+        if(ctx.req.getRemoteAddr().equals("[0:0:0:0:0:0:0:1]")){
+            System.out.println("remove Account Type");
+        }
     };
 
     @Override
@@ -40,5 +51,6 @@ public class ClientController implements Controller{
         app.get("/clients/{clientId}",getClientById);
         app.post("/clients/",addClient);
         app.put("/clients/{clientId}",updateClient);
+        app.delete("/clients/{clientId}",removeClient);
     }
 }

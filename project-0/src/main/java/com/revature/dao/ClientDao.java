@@ -90,12 +90,13 @@ public class ClientDao {
 
     public Client updateClient(Client client) throws SQLException {
         try(Connection connection=ConnectionUtility.getConnection()){
-             String query = "UPDATE clients SET first_name=?, last_name=?";
+             String query = "UPDATE clients SET first_name=?, last_name=? WHERE clients.id=?";
 
              PreparedStatement pstmt = connection.prepareStatement(query);
 
              pstmt.setString(1,client.getFirst_name());
              pstmt.setString(2,client.getLast_name());
+             pstmt.setInt(3,client.getId());
 
              pstmt.executeUpdate();
              pstmt.close();
@@ -105,7 +106,7 @@ public class ClientDao {
 
     public boolean removeClient(int id) throws SQLException {
         try(Connection connection=ConnectionUtility.getConnection()){
-            String query = "DELETE FROM clients WHERE client.id = ?";
+            String query = "DELETE FROM clients WHERE clients.id = ?";
 
             PreparedStatement pstmt = connection.prepareStatement(query);
 
