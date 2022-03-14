@@ -9,8 +9,11 @@ import io.javalin.http.Handler;
 public class AccountTypeController implements Controller{
    AccountTypeService accountTypeService = new AccountTypeService();
 
-    private Handler removeAccountType = ctx->{
-        ctx.json(accountTypeService.removeClient(ctx.pathParam("accountTypeId")));
+    private Handler removeAccountType = ctx -> {
+        //System.out.println(ctx.req.getRemoteAddr());
+        if(ctx.req.getRemoteAddr().equals("[0:0:0:0:0:0:0:1]")){
+            ctx.json(accountTypeService.removeClient(ctx.pathParam("account_type_id")));
+        }
     };
 
     private Handler addAccountType = ctx -> {
@@ -21,7 +24,7 @@ public class AccountTypeController implements Controller{
     };
 
     private Handler updateAccountType = ctx -> {
-        String accountTypeId = ctx.pathParam("accountTypeId");
+        String accountTypeId = ctx.pathParam("account_type_id");
         AccountType accountType = accountTypeService.updateAccountType(accountTypeId,ctx.bodyAsClass(AccountType.class));
 
         ctx.status(201);
@@ -30,9 +33,9 @@ public class AccountTypeController implements Controller{
 
     @Override
     public void mapEndPoints(Javalin app) {
-        app.delete("/account-types/{accountTypeId}",removeAccountType);
+        app.delete("/account-types/{account_type_id}",removeAccountType);
         app.post("/account-types",addAccountType);
-        app.put("/account-types/{accountTypeId}",updateAccountType);
+        app.put("/account-types/{account_type_id}",updateAccountType);
     }
 
 }
