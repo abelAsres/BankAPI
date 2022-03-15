@@ -1,6 +1,6 @@
-drop table if exists clients2;
+drop table if exists accounts;
+drop table if exists clients;
 drop table if exists account_types;
-drop table if exists accounts2;
 
 create table clients(
 	id SERIAL primary key,-- SERIAL is a special datatype that will automatically increment itself
@@ -20,7 +20,7 @@ create table accounts(
 	account_type_id INTEGER not null,
 	amount INTEGER not null default 0,
 	CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients (id)ON DELETE CASCADE, -- FOREIGN key
-	CONSTRAINT fk_account_type FOREIGN KEY(account_type_id) REFERENCES account_types (id) ON UPDATE CASCADE-- FOREIGN KEY
+	CONSTRAINT fk_account_type FOREIGN KEY(account_type_id) REFERENCES account_types (id)on delete restrict-- FOREIGN KEY
 	
 );
 
@@ -38,7 +38,8 @@ values
 ('Hugh','Jass'),
 ('Ivana','Tinkle'),
 ('Ahmed','Adoudi'),
-('Olaf','Marifrend-Sergei');
+('Olaf','Marifrend-Sergei'),
+('Bea','O''Proplam';
 
 insert into account_types(account_type)
 values
@@ -59,5 +60,8 @@ select * from account_types;
 select * from accounts;
 
 
-delete from clients2 where id= 1;
+delete from clients where id= 1;
 select * from accounts;
+
+
+delete from accounts where id= 2;

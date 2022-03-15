@@ -3,6 +3,7 @@ package com.revature.controller;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.revature.model.Account;
 import com.revature.model.Client;
+import com.revature.model.ClientAccount;
 import com.revature.service.AccountService;
 import com.revature.service.ClientService;
 import io.javalin.Javalin;
@@ -48,9 +49,43 @@ public class ClientController implements Controller{
     private Handler getAccountsByClientId = ctx -> {
         String clientId = ctx.pathParam("client_id");
         Client client = clientService.getClientById(clientId);
-        List<Account> clientAccounts = accountService.getAllAccountByClientId(client.getId());
-
+        List<ClientAccount> clientAccounts;
+        int amountLessThan= ctx.queryParam("amountLessThan") == null ? 0 : Integer.parseInt(ctx.queryParam("amountLessThan"));
+        int amountGreaterThan = ctx.queryParam("amountGreaterThan") == null ? 0 : Integer.parseInt(ctx.queryParam("amountGreaterThan"));
+        if(amountLessThan != 0 || amountGreaterThan != 0){
+            clientAccounts= accountService.getAllAccountByClientId(client.getId(),
+                    amountLessThan,
+                    amountGreaterThan);
+        }else {
+           clientAccounts = accountService.getAllAccountByClientId(client.getId());
+        }
         ctx.json(clientAccounts);
+    };
+
+    private Handler addAccountForClient = ctx -> {
+        Client client = clientService.getClientById(ctx.pathParam("client_id"));
+        Account addedClientAccount = accountService.addAccountForClient(client.getId());
+        ctx.status(201);
+        ctx.json(addedClientAccount);
+    };
+
+    private Handler getClientAccountByAccountId = ctx -> {
+        Client client = clientService.getClientById(ctx.pathParam("client_id"));
+        ClientAccount clientAccount = accountService.getClientAccountByAccountId(ctx.pathParam("account_id"));
+        ctx.json(clientAccount);
+    };
+
+    private Handler updateClientAccountByAccountId = ctx -> {
+        String accountId =ctx.pathParam("account_id");
+        String clientId = ctx.pathParam("client_id");
+        Account account = ctx.bodyAsClass(Account.class);
+        Account accountUpdated = accountService.updateClientAccountByAccountId(accountId,account,clientId);
+        ctx.status(201);
+        ctx.json(accountUpdated);
+    };
+
+    private Handler removeClientAccountByAccountId = ctx -> {
+
     };
 
     @Override
@@ -61,5 +96,9 @@ public class ClientController implements Controller{
         app.put("/clients/{client_id}",updateClient);
         app.delete("/clients/{client_id}",removeClient);
         app.get("/clients/{client_id}/accounts",getAccountsByClientId);
+        app.post("/clients/{client_id}/accounts",addAccountForClient);
+        app.get("/clients/{client_id}/accounts/{account_id}",getClientAccountByAccountId);
+        app.put("/clients/{client_id}/accounts/{account_id}",updateClientAccountByAccountId);
+        app.delete("/clients/{client_id}/accounts/{account_id}",removeClientAccountByAccountId);
     }
 }

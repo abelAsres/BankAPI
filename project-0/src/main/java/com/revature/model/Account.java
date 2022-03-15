@@ -10,6 +10,12 @@ public class Account {
 
     public Account(){}
 
+    public Account(int id, int clientId){
+        this.id = id;
+        this.clientId = clientId;
+        this.accountTypeId = 1;
+        this.balance = 0;
+    }
     public Account(int id, int clientId, int accountTypeId, double balance) {
         this.id = id;
         this.clientId = clientId;
