@@ -71,7 +71,8 @@ public class ClientController implements Controller{
 
     private Handler getClientAccountByAccountId = ctx -> {
         Client client = clientService.getClientById(ctx.pathParam("client_id"));
-        ClientAccount clientAccount = accountService.getClientAccountByAccountId(ctx.pathParam("account_id"));
+        Account account = accountService.getAccountById(ctx.pathParam("account_id"));
+        ClientAccount clientAccount = accountService.getClientAccountByAccountId(client,account);
         ctx.json(clientAccount);
     };
 
@@ -85,7 +86,9 @@ public class ClientController implements Controller{
     };
 
     private Handler removeClientAccountByAccountId = ctx -> {
-
+        Client client = clientService.getClientById(ctx.pathParam("client_id"));
+        Account account = accountService.getAccountById(ctx.pathParam("account_id"));
+        ctx.json(accountService.removeClientAccountById(account,client));
     };
 
     @Override

@@ -37,7 +37,6 @@ public class AccountsDao {
             results.close();
         }
         return clientAccounts;
-
     }
 
     public List<ClientAccount> getAllAccountByClientId(int clientId, int amountLessThan, int amountGreaterThan) throws SQLException {
@@ -82,6 +81,28 @@ public class AccountsDao {
             results.close();
         }
         return clientAccounts;
+    }
+
+    public Account getAccountById(int accountId) throws SQLException {
+
+        try(Connection connection= ConnectionUtility.getConnection()){
+            String query = "SELECT * FROM accounts WHERE id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1,accountId);
+
+            ResultSet result = pstmt.executeQuery();
+
+            result.next();
+            Account account = new Account(result.getInt("id"),
+                    result.getInt("client_id"),
+                    result.getInt("account_type_id"),
+                    result.getDouble("balance"));
+
+            pstmt.close();
+            result.close();
+
+            return account;
+        }
     }
 
     public Account addAccountForClient(int clientId) throws SQLException {
@@ -143,5 +164,21 @@ public class AccountsDao {
         return account;
     }
 
+    public boolean removeClientAccountById (int accountId) throws SQLException {
+        try (Connection connection = ConnectionUtility.getConnection()){
+            String query = "DELETE FROM accounts WHERE id = ?";
 
+            PreparedStatement pstmt = connection.prepareStatement(query);
+
+            pstmt.setInt(1,accountId);
+
+            int deletedRecords = pstmt.executeUpdate();
+            pstmt.close();
+
+            if(deletedRecords == 1){
+                return true;
+            }
+        }
+        return false;
+    }
 }

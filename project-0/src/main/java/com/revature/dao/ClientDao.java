@@ -25,6 +25,8 @@ public class ClientDao {
     * 6. handle anything returned from the DB
     * */
     public Client addClient(Client client) throws SQLException {
+
+
         try(Connection connection = ConnectionUtility.getConnection()) {
             String query = "INSERT INTO clients(first_name,last_name) VALUES(?,?)";
 
@@ -43,6 +45,28 @@ public class ClientDao {
             result.close();
             return new Client(generatedId,client.getFirst_name(),client.getLast_name());
         }
+    }
+
+    public boolean isClientInDatabase(Client client) throws SQLException {
+        try(Connection connection = ConnectionUtility.getConnection()){
+            String query = "SELECT * FROM clients WHERE first_name = ? AND last_name = ?";
+
+            PreparedStatement pstmt = connection.prepareStatement(query);
+
+            pstmt.setString(1,client.getFirst_name());
+            pstmt.setString(2,client.getLast_name());
+
+            ResultSet result = pstmt.executeQuery();
+            result.next();
+            int clients = result.getRow();
+            result.close();
+            if (clients == 1){
+                return true;
+            }
+
+            return false;
+        }
+
     }
 
     public List<Client> getAllClients() throws SQLException {

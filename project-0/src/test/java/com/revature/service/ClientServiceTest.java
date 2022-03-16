@@ -1,6 +1,8 @@
 package com.revature.service;
 
 import com.revature.dao.ClientDao;
+import com.revature.exception.ClientAlreadyExistsException;
+import com.revature.exception.ClientNotFoundException;
 import com.revature.model.Client;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,11 +26,11 @@ public class ClientServiceTest {
         mockClients.add(new Client(1, "Seyour", "Butz"));
         mockClients.add(new Client(2, "Anita-Amanda", "Huginkiss"));
         mockClients.add(new Client(3, "Ivana", "Tinkle"));
-        mockClients.add(new Client(4, "Olaf", "Marifrend-Sergei"));
+        mockClients.add(new Client(4, "Olaf", "Marfried-Sergei"));
 
 
         // Whenever the code in the Service layer calls the getAllStudents() method
-        // for the dao layer, then return the list of students
+        // for the dao layer, then return the list of clients
         // we have specified above
 
         //stubbing
@@ -44,8 +46,6 @@ public class ClientServiceTest {
 
         //Assert
         List<Client> expectedClients = new ArrayList<>(mockClients);
-
-
         Assertions.assertEquals(expectedClients, actualClients);
     }
 
@@ -65,6 +65,33 @@ public class ClientServiceTest {
         verify(mockClientDao).getClientByid(1);
         Assertions.assertEquals(expectedClient, actualClient);
     }
+    @Test
+    public void test_getUpdateById_clientDoesNotExist () throws SQLException, ClientNotFoundException {
+        //Arrange
+        ClientDao mockClientDao = mock(ClientDao.class);
+        ClientService clientService = new ClientService(mockClientDao);
+        Client clientToUpdate = new Client(2,"Hugh","Bass");
+
+
+        //Act+Assertion
+        Assertions.assertThrows(ClientNotFoundException.class,()->{
+            clientService.updateClient("1",clientToUpdate);
+        });
+    }
+
+    @Test
+    public void test_getClientById_clientDoesNotExist () throws SQLException, ClientNotFoundException {
+        //Arrange
+        ClientDao mockClientDao = mock(ClientDao.class);
+        ClientService clientService = new ClientService(mockClientDao);
+
+        //Act+Assertion
+        Assertions.assertThrows(ClientNotFoundException.class,()->{
+            clientService.getClientById("100");
+        });
+    }
+
+
 }
     /*@Test
     public void testUpdateClient() throws SQLException {
@@ -83,5 +110,19 @@ public class ClientServiceTest {
                 return client.equals(updatedClient);
             }
         });
+
+    @Test
+    public void test_addClient_clientAlreadyInDatabase(){
+        //Arrange
+        ClientDao mockClientDao = mock(ClientDao.class);
+        ClientService clientService = new ClientService(mockClientDao);
+        Client client = new Client(1,"Bart","Simpson");
+
+        //Act+Assertion
+        Assertions.assertThrows(ClientAlreadyExistsException.class,()->{
+            clientService.addClient(client);
+        });
+    }
+
     */
 

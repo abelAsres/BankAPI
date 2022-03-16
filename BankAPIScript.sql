@@ -17,8 +17,8 @@ account_type VARCHAR(25)
 create table accounts(
 	id SERIAL primary key,
 	client_id INTEGER not null,
-	account_type_id INTEGER not null,
-	amount INTEGER not null default 0,
+	account_type_id INTEGER default 1,
+	balance INTEGER not null default 0,
 	CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients (id)ON DELETE CASCADE, -- FOREIGN key
 	CONSTRAINT fk_account_type FOREIGN KEY(account_type_id) REFERENCES account_types (id)on delete restrict-- FOREIGN KEY
 	
@@ -39,7 +39,7 @@ values
 ('Ivana','Tinkle'),
 ('Ahmed','Adoudi'),
 ('Olaf','Marifrend-Sergei'),
-('Bea','O''Proplam';
+('Bea','O''Proplam');
 
 insert into account_types(account_type)
 values
@@ -48,20 +48,22 @@ values
 ('TFSA'),
 ('Chequing');
 
-insert into accounts (client_id,account_type_id,amount)
+insert into accounts (client_id,account_type_id,balance)
 values 
 (1,1,10000),
 (3,2,500),
 (10,4,1030),
-(1,2,500);
+(1,2,500),
+(3,1,10000),
+(3,2,500),
+(10,4,1030),
+(3,4,500),
+(10,1,1030),
+(10,2,1030),
+(10,3,1030);
 
 select * from clients;
 select * from account_types;
 select * from accounts;
 
-
-delete from clients where id= 1;
-select * from accounts;
-
-
-delete from accounts where id= 2;
+SELECT clients.first_name, clients.last_name, account_types.account_type, accounts.balanceFROM accounts JOIN clients ON accounts.client_id = clients.id JOIN account_types ON account_types.id = accounts.account_type_idWHERE accounts.client_id = 3;

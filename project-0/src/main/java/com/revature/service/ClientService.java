@@ -1,6 +1,8 @@
 package com.revature.service;
 
 import com.revature.dao.ClientDao;
+import com.revature.exception.ClientAlreadyExistsException;
+import com.revature.exception.ClientNotFoundException;
 import com.revature.model.Client;
 
 import java.sql.SQLException;
@@ -29,7 +31,7 @@ public class ClientService {
         return this.clientDao.getAllClients();
     }
 
-    public Client getClientById(String id) throws SQLException,Exception {
+    public Client getClientById(String id) throws SQLException,ClientNotFoundException {
         try {
             // This could throw an unchecked exception
             // known as NumberFormatException
@@ -38,7 +40,7 @@ public class ClientService {
             Client client = this.clientDao.getClientByid(Integer.parseInt(id));
 
             if(client == null){
-                throw new Exception("Client with id "+id+" does not exist in DB");
+                throw new ClientNotFoundException("Client with id "+id+" does not exist in DB");
             }
 
             return client;
@@ -47,43 +49,61 @@ public class ClientService {
         }
     }
 
-    public Client updateClient(String clientId,Client client) throws Exception {
+    public Client updateClient(String clientId,Client client) throws ClientNotFoundException, SQLException {
 
-        int id = Integer.parseInt(clientId);
-        //check if client exists
-        if (clientDao.getClientByid(id) == null){
-            throw new Exception("Client with the id "+ clientId+" does not exist in the database");
-        }
+        try{
+            int id = Integer.parseInt(clientId);
+            //check if client exists
+            if (clientDao.getClientByid(id) == null){
+                throw new ClientNotFoundException("Client with the id "+ clientId+" does not exist in the database");
+            }
 
-        validateClientInformation(client);
-        client.setId(id);
-        return this.clientDao.updateClient(client);
-    }
+            validateClientInformation(client);
+            client.setId(id);
 
-    public void validateClientInformation(Client client) {
-        client.setFirst_name(client.getFirst_name().trim());
-        client.setLast_name(client.getLast_name().trim());
-
-        if (!client.getFirst_name().matches("[a-zA-Z?']+")) {
-            throw new IllegalArgumentException("First name must only have alphabetical characters. First name input was " + client.getFirst_name());
-        }
-
-        if (!client.getLast_name().matches("[a-zA-Z?']+")) {
-            throw new IllegalArgumentException("Last name must only have alphabetical characters. Last name input was " + client.getLast_name());
+            return this.clientDao.updateClient(client);
+        }catch(NumberFormatException e){
+            throw new IllegalArgumentException("The client id provided was invalid");
         }
     }
 
-    public boolean removeClient(String id) throws Exception {
-        int clientId = Integer.parseInt(id);
+    public void validateClientInformation(Client client){
+        try{
+            client.setFirst_name(client.getFirst_name().trim());
+            client.setLast_name(client.getLast_name().trim());
 
-        if (clientDao.getClientByid(clientId) == null){
-            throw new Exception("Client with the id "+ clientId+" does not exist in the database");
+            if (!client.getFirst_name().matches("[a-zA-Z?']+")) {
+                throw new IllegalArgumentException("First name must only have alphabetical characters. First name input was " + client.getFirst_name());
+            }
+
+            if (!client.getLast_name().matches("[a-zA-Z?']+")) {
+                throw new IllegalArgumentException("Last name must only have alphabetical characters. Last name input was " + client.getLast_name());
+            }
+        }catch(NullPointerException e){
+            new NullPointerException("Parameter specified as non-null is null");
         }
-        return clientDao.removeClient(clientId);
+
     }
 
-    public Client addClient(Client newClient) throws SQLException {
-        validateClientInformation(newClient);
-        return clientDao.addClient(newClient);
+    public boolean removeClient(String id) throws ClientNotFoundException, SQLException {
+        try{
+            int clientId = Integer.parseInt(id);
+
+            if (clientDao.getClientByid(clientId) == null){
+                throw new ClientNotFoundException("Client with the id "+ clientId+" does not exist in the database");
+            }
+            return clientDao.removeClient(clientId);
+        }catch(NumberFormatException e){
+            throw new IllegalArgumentException("The client id provided was invalid");
+        }
+    }
+
+    public Client addClient(Client newClient) throws SQLException, ClientAlreadyExistsException {
+       if(clientDao.isClientInDatabase(newClient)){
+            throw new ClientAlreadyExistsException(newClient.getFirst_name()+" "+newClient.getLast_name()+" is already a client");
+       }else{
+           validateClientInformation(newClient);
+           return clientDao.addClient(newClient);
+       }
     }
 }

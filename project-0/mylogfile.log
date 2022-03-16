@@ -1,0 +1,17 @@
+15 03 2022 - 23:11:57.026 [main] INFO  io.javalin.Javalin - 
+       __                      __ _            __ __
+      / /____ _ _   __ ____ _ / /(_)____      / // /
+ __  / // __ `/| | / // __ `// // // __ \    / // /_
+/ /_/ // /_/ / | |/ // /_/ // // // / / /   /__  __/
+\____/ \__,_/  |___/ \__,_//_//_//_/ /_/      /_/
+
+          https://javalin.io/documentation
+
+15 03 2022 - 23:11:57.053 [main] INFO  org.eclipse.jetty.util.log - Logging initialized @673ms to org.eclipse.jetty.util.log.Slf4jLog
+15 03 2022 - 23:11:57.054 [main] INFO  io.javalin.Javalin - Starting Javalin ...
+15 03 2022 - 23:11:57.083 [main] INFO  io.javalin.Javalin - You are running Javalin 4.3.0 (released January 13, 2022).
+15 03 2022 - 23:11:57.088 [main] INFO  io.javalin.Javalin - No port specified, starting on port 8080. Call start(port) to change ports.
+15 03 2022 - 23:11:57.701 [main] INFO  io.javalin.Javalin - Listening on http://localhost:8080/
+15 03 2022 - 23:11:57.701 [main] INFO  io.javalin.Javalin - Javalin started in 648ms \o/
+15 03 2022 - 23:12:12.220 [JettyServerThreadPool-26] INFO  com.revature.main.Driver - GET request received for /clients/3/accounts/1
+15 03 2022 - 23:12:12.592 [JettyServerThreadPool-26] WARN  c.r.controller.ExceptionController - Client is not authorized for this account Account : 1 does not belong to client with id: 3
