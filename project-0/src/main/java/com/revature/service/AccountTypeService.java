@@ -4,6 +4,7 @@ import com.revature.dao.AccountTypesDao;
 import com.revature.model.AccountType;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class AccountTypeService {
     private AccountTypesDao accountTypesDao;
@@ -12,6 +13,9 @@ public class AccountTypeService {
         this.accountTypesDao = new AccountTypesDao();
     }
 
+    public List<AccountType> getAllAccountTypes() throws SQLException {
+        return accountTypesDao.getAllAccountTypes();
+    }
     public AccountType updateAccountType(String accountTypeId, AccountType accountType) throws Exception {
 
         int id = Integer.parseInt(accountTypeId);

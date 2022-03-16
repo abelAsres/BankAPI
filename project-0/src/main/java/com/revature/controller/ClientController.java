@@ -1,6 +1,5 @@
 package com.revature.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.revature.model.Account;
 import com.revature.model.Client;
 import com.revature.model.ClientAccount;
@@ -8,7 +7,6 @@ import com.revature.service.AccountService;
 import com.revature.service.ClientService;
 import io.javalin.Javalin;
 import io.javalin.http.Handler;
-import org.eclipse.jetty.util.ajax.JSON;
 
 import java.util.List;
 

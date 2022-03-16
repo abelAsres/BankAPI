@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.revature.service.ClientServiceTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2022-03-16T16:04:23" hostname="LAPTOP-HO6FK4NQ" time="1.196">
+  <properties/>
+  <testcase name="test_getClientById_clientDoesNotExist()" classname="com.revature.service.ClientServiceTest" time="1.149"/>
+  <testcase name="testGetClientById()" classname="com.revature.service.ClientServiceTest" time="0.039"/>
+  <testcase name="testGetAllClients()" classname="com.revature.service.ClientServiceTest" time="0.002"/>
+  <testcase name="test_getUpdateById_clientDoesNotExist()" classname="com.revature.service.ClientServiceTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

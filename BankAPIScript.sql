@@ -58,12 +58,10 @@ values
 (3,2,500),
 (10,4,1030),
 (3,4,500),
-(10,1,1030),
-(10,2,1030),
-(10,3,1030);
+(10,1,100030),
+(10,2,100),
+(10,3,10);
 
 select * from clients;
 select * from account_types;
 select * from accounts;
-
-SELECT clients.first_name, clients.last_name, account_types.account_type, accounts.balanceFROM accounts JOIN clients ON accounts.client_id = clients.id JOIN account_types ON account_types.id = accounts.account_type_idWHERE accounts.client_id = 3;

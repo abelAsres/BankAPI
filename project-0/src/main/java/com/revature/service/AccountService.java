@@ -3,6 +3,7 @@ package com.revature.service;
 import com.revature.dao.AccountsDao;
 import com.revature.dao.ClientDao;
 import com.revature.exception.AccountDoesNotBelongToClient;
+import com.revature.exception.ClientNotFoundException;
 import com.revature.model.Account;
 import com.revature.model.Client;
 import com.revature.model.ClientAccount;
@@ -52,12 +53,12 @@ public class AccountService {
 
         ClientDao clientDao = new ClientDao();
         if (clientDao.getClientByid(cId) == null){
-            throw new Exception("Client with the id "+ cId +" does not exist in the database");
+            throw new ClientNotFoundException("Client with the id "+ cId +" does not exist in the database");
         }
         account.setClientId(cId);
         //check if client exists
         if (accountsDao.getClientAccountByAccountId(aId) == null){
-            throw new Exception("Account with the id "+ accountId +" does not exist in the database");
+            throw new AccountDoesNotBelongToClient("Account with the id "+ accountId +" does not exist in the database");
         }
 
         if (cId != account.getClientId()){

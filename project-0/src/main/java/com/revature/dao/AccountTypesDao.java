@@ -4,6 +4,8 @@ import com.revature.model.AccountType;
 import com.revature.ultility.ConnectionUtility;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountTypesDao {
   //addAcountType
@@ -11,6 +13,24 @@ public class AccountTypesDao {
   //updateAccountType
   //getAccountTypeById
 
+    public List<AccountType> getAllAccountTypes() throws SQLException {
+        List<AccountType> accountTypes = new ArrayList<>();
+        try(Connection connection = ConnectionUtility.getConnection()){
+            String query = "SELECT * FROM account_types";
+
+            PreparedStatement pstmt = connection.prepareStatement(query);
+
+            ResultSet results = pstmt.executeQuery();
+
+            while(results.next()){
+                accountTypes.add(new AccountType(results.getInt("id"),
+                        results.getString("account_type")));
+            }
+            pstmt.close();
+            results.close();
+        }
+        return accountTypes;
+    }
     public AccountType getAccountById(int id) throws SQLException {
         try(Connection connection= ConnectionUtility.getConnection()){
             String query = "SELECT * FROM account_types WHERE account_types.id = ?";
